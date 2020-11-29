@@ -1,6 +1,9 @@
 #include <dali-toolkit/dali-toolkit.h>
 #include <dali-toolkit/devel-api/controls/text-controls/text-field-devel.h>
 #include <dali-toolkit/devel-api/controls/text-controls/text-editor-devel.h>
+#include <dali-toolkit/devel-api/visuals/visual-properties-devel.h>
+#include <dali/integration-api/events/touch-event-integ.h>
+#include <dali/integration-api/events/wheel-event-integ.h>
 
 using namespace Dali;
 using namespace Dali::Toolkit;
@@ -17,39 +20,43 @@ public:
   void Create(Application& application)
   {
     Window window = application.GetWindow();
-    window.SetBackgroundColor(Vector4(0.04f, 0.345f, 0.392f, 1.0f));
 
-    mEditor = TextEditor::New();
-    mEditor.SetProperty(Actor::Property::PARENT_ORIGIN, ParentOrigin::TOP_CENTER);
-    mEditor.SetProperty(Actor::Property::ANCHOR_POINT, AnchorPoint::TOP_CENTER);
-    mEditor.SetProperty(Actor::Property::POSITION, Vector3(0.f, 0.0f, 0.f));
-    mEditor.SetProperty(Actor::Property::SIZE, Vector2(100.f, 100.0f));
-    mEditor.SetProperty(TextEditor::Property::TEXT, "Hello\nHello\nHello\nHello\nHello\nHello");
+    mImageView = ImageView::New();
+    mImageView.SetProperty(Actor::Property::PARENT_ORIGIN, ParentOrigin::TOP_CENTER);
+    mImageView.SetProperty(Actor::Property::ANCHOR_POINT, AnchorPoint::TOP_CENTER);
+    mImageView.SetProperty(Actor::Property::POSITION, Vector3(0.f, 0.0f, 0.f));
+    mImageView.SetProperty(Actor::Property::SIZE, Vector2(100.0f, 300.0f));
+    mImageView.SetBackgroundColor(Vector4(0.3f, 0.3f, 0.3f, 1.0f));
 
-    mButton = PushButton::New();
-    mButton.SetProperty(Actor::Property::PARENT_ORIGIN, ParentOrigin::CENTER);
-    mButton.SetProperty(Actor::Property::ANCHOR_POINT, AnchorPoint::CENTER);
-    mButton.SetProperty(Actor::Property::SIZE, Vector2(50.f, 50.0f));
-    mButton.SetProperty(Actor::Property::POSITION, Vector3(0.f, 0.0f, 0.f));
-    mButton.SetProperty(Button::Property::LABEL, "click");
-    mButton.ClickedSignal().Connect(this, &SimpleApp::OnButtonClicked);
+    mImageView2 = ImageView::New();
+    mImageView2.SetProperty(Actor::Property::PARENT_ORIGIN, ParentOrigin::TOP_CENTER);
+    mImageView2.SetProperty(Actor::Property::ANCHOR_POINT, AnchorPoint::TOP_CENTER);
+    mImageView2.SetProperty(Actor::Property::POSITION, Vector3(0.f, 350.0f, 0.f));
+    mImageView2.SetProperty(Actor::Property::SIZE, Vector2(100.0f, 300.0f));
+    mImageView2.SetBackgroundColor(Vector4(0.7f, 0.7f, 0.7f, 1.0f));
 
-    window.Add(mButton);
-    window.Add(mEditor);
-  }
 
-  bool OnButtonClicked(Button button)
-  {
-    if(button == mButton)
-    {
-    }
-    return true;
+    Property::Map imageMap;
+    imageMap[ Toolkit::Visual::Property::TYPE ] = Toolkit::Visual::IMAGE;
+    imageMap[ ImageVisual::Property::URL ] = "img.png";
+    imageMap[ ImageVisual::Property::FITTING_MODE ] = FittingMode::FIT_WIDTH;
+    mImageView.SetProperty(ImageView::Property::IMAGE, imageMap);
+
+    Property::Map imageMap2;
+    imageMap2[ Toolkit::Visual::Property::TYPE ] = Toolkit::Visual::IMAGE;
+    imageMap2[ ImageVisual::Property::URL ] = "img.png";
+    imageMap2[ DevelVisual::Property::VISUAL_FITTING_MODE ] = Toolkit::DevelVisual::FIT_WIDTH;
+    mImageView2.SetProperty(ImageView::Property::IMAGE, imageMap2);
+
+
+    window.Add(mImageView);
+    window.Add(mImageView2);
   }
 
 private:
   Application& mApplication;
-  TextEditor mEditor;
-  PushButton mButton;
+  ImageView mImageView;
+  ImageView mImageView2;
 };
 
 int DALI_EXPORT_API main(int argc, char** argv)
